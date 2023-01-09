@@ -21,3 +21,19 @@ export interface PokemonResponse {
   sound: string;
   isFavorite: boolean;
 }
+
+export interface Pokemon {
+  id: string;
+  number: number;
+  name: string;
+  image: string;
+  isFavorite: boolean;
+  types?: string[];
+}
+
+export interface PokemonsApiResponse {
+  count: number;
+  items: Pokemon[];
+  limit: number;
+  offset: number;
+}
