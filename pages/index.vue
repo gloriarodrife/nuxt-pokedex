@@ -1,9 +1,11 @@
 <template>
-  <div class="list">
-    <NuxtLink v-for="pokemon in pokemons?.items" :to="`/pokemon/${pokemon.id}`">
-      <PokemonCard :pokemon="pokemon" />
-    </NuxtLink>
-  </div>
+  <ul class="list" v-if="pokemons">
+    <li v-for="pokemon in pokemons.items" :key="pokemon.id">
+      <NuxtLink :to="`/pokemon/${pokemon.id}`">
+        <PokemonCard :pokemon="pokemon" />
+      </NuxtLink>
+    </li>
+  </ul>
 </template>
 
 <script lang="ts" setup>
