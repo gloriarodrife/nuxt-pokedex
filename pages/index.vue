@@ -9,13 +9,16 @@
 </template>
 
 <script lang="ts" setup>
-import type { PokemonsApiResponse } from '~/types';
+import { getPokemons } from '~/services/pokemons';
 
-const config = useRuntimeConfig();
-
-const { pending, data: pokemons } = await useLazyFetch<PokemonsApiResponse>(
-  `${config.public.API_BASE_URL}/pokemon`
-);
+const {
+  pending,
+  data: pokemons,
+  refresh,
+} = await useLazyAsyncData('pokemon-list', async () => {
+  const response = await getPokemons({ limit: 20, offset: 0 });
+  return response;
+});
 </script>
 
 <style lang="scss">

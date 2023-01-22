@@ -37,3 +37,11 @@ export interface PokemonsApiResponse {
   limit: number;
   offset: number;
 }
+
+export interface ParamsPokemons {
+  limit: number;
+  offset: number;
+  search?: string;
+  isFavorite?: boolean;
+  type?: string;
+}
