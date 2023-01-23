@@ -7,7 +7,13 @@
     </li>
   </ul>
 
-  <button @click="loadMorePokemons">More pokemons</button>
+  <button
+    class="button"
+    v-if="pokemonsCache.length <= pokemonsCount - 1"
+    @click="loadMorePokemons"
+  >
+    More pokemons
+  </button>
 </template>
 
 <script lang="ts" setup>
@@ -15,9 +21,10 @@ import type { ParamsPokemons, PokemonsApiResponse } from '~/types';
 import { getPokemons } from '~/services/pokemons';
 
 const pokemonsCache = useState<PokemonsApiResponse['items']>(() => []);
+const pokemonsCount = useState<number>();
 
 const queryParams = ref<ParamsPokemons>({
-  limit: 4,
+  limit: 20,
   offset: 0,
   search: '',
   isFavorite: false,
@@ -33,7 +40,7 @@ const {
     limit: queryParams.value.limit,
     offset: queryParams.value.offset,
   });
-
+  pokemonsCount.value = response.count;
   pokemonsCache.value = [...pokemonsCache.value, ...response.items];
 
   return pokemonsCache.value;
@@ -59,5 +66,20 @@ const loadMorePokemons = () => {
     color: inherit;
     text-decoration: none;
   }
+}
+
+.button {
+  position: relative;
+  left: 50%;
+  padding: 0 8px;
+  font-size: 1rem;
+  margin-bottom: 8px;
+  border: 1px solid rgba(31, 31, 31, 0.3);
+  background-color: #f3f3f3;
+  box-sizing: border-box;
+  height: 30px;
+  border-radius: 4px;
+  cursor: pointer;
+  color: #000000;
 }
 </style>
