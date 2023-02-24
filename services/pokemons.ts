@@ -30,3 +30,31 @@ export const getPokemons = async ({
 
   return data;
 };
+
+export const getPokemonById = async (id: string) => {
+  const data = await $fetch(`${URL_API}/pokemon/${id}`);
+
+  return data;
+};
+
+export const getPokemonsTypes = async () => {
+  const data = await $fetch(`${URL_API}/pokemon-types`);
+
+  return data;
+};
+
+export const postPokemonFavorite = async (id: string) => {
+  const data = await $fetch(`${URL_API}/pokemon/${id}/favorite`, {
+    method: 'POST',
+  });
+
+  return data;
+};
+
+export const postPokemonUnFavorite = async (id: string) => {
+  const data = await $fetch(`${URL_API}/pokemon/${id}/unfavorite`, {
+    method: 'POST',
+  });
+
+  return data;
+};
