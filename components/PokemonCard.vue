@@ -6,11 +6,12 @@
     <div class="card__footer">
       <div>
         <h2 class="card__title">{{ pokemon.name }}</h2>
-
         <span class="card__types" v-if="pokemon.types">{{
           pokemon.types.join(', ')
         }}</span>
       </div>
+      <Heart v-if="!pokemon.isFavorite" />
+      <HeartFavorite v-if="pokemon.isFavorite" />
     </div>
   </div>
 </template>
