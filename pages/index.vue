@@ -1,4 +1,54 @@
 <template>
+  <div>
+    <div class="filters__favorites">
+      <button
+        class="filter__all"
+        :class="{
+          active: !queryParams.isFavorite,
+        }"
+        @click="filterAllPokemons"
+      >
+        All
+      </button>
+      <button
+        class="filter__favorites"
+        :class="{
+          active: queryParams.isFavorite,
+        }"
+        @click="filterFavorites"
+      >
+        Favorites
+      </button>
+    </div>
+  </div>
+  <div class="type-favorites">
+    <input
+      class="filter__search"
+      placeholder="Search"
+      type="search"
+      id="name"
+      name="name"
+      @input="filterByName"
+    />
+    <div class="select">
+      <select
+        name="types"
+        id="types"
+        class="filter__select"
+        @change="onSelectType"
+      >
+        <option :value="''">Type</option>
+        <option
+          :value="type"
+          :key="index"
+          v-for="(type, index) in pokemonsTypes"
+        >
+          {{ type }}
+        </option>
+      </select>
+    </div>
+  </div>
+
   <ul class="list" v-if="pokemons">
     <li v-for="pokemon in pokemons" :key="pokemon.id">
       <NuxtLink :to="`/pokemon/${pokemon.id}`">
@@ -17,8 +67,8 @@
 </template>
 
 <script lang="ts" setup>
-import type { ParamsPokemons, PokemonsApiResponse } from '~/types';
-import { getPokemons } from '~/services/pokemons';
+import type { ParamsPokemons, Pokemon, PokemonsApiResponse } from '~/types';
+import { getPokemons, getPokemonsTypes } from '~/services/pokemons';
 
 const pokemonsCache = useState<PokemonsApiResponse['items']>(() => []);
 const pokemonsCount = useState<number>();
@@ -37,14 +87,48 @@ const {
   refresh,
 } = await useLazyAsyncData('pokemon-list', async () => {
   const response = await getPokemons({
-    limit: queryParams.value.limit,
-    offset: queryParams.value.offset,
+    ...queryParams.value,
+    search: queryParams.value.search?.toLowerCase(),
   });
   pokemonsCount.value = response.count;
+
   pokemonsCache.value = [...pokemonsCache.value, ...response.items];
 
   return pokemonsCache.value;
 });
+
+const { data: pokemonsTypes } = await useLazyAsyncData(
+  'pokemons-types',
+  async () => {
+    const response = await getPokemonsTypes();
+
+    return response;
+  }
+);
+
+const filterFavorites = () => {
+  pokemonsCache.value = [];
+  queryParams.value.isFavorite = true;
+  refresh();
+};
+
+const filterAllPokemons = () => {
+  pokemonsCache.value = [];
+  queryParams.value.isFavorite = false;
+  refresh();
+};
+
+const filterByName = (event: any) => {
+  pokemonsCache.value = [];
+  queryParams.value.search = event.target.value;
+  refresh();
+};
+
+const onSelectType = (event: any) => {
+  pokemonsCache.value = [];
+  queryParams.value.type = event.target.value;
+  refresh();
+};
 
 const loadMorePokemons = () => {
   queryParams.value.offset += queryParams.value.limit;
@@ -81,5 +165,69 @@ const loadMorePokemons = () => {
   border-radius: 4px;
   cursor: pointer;
   color: #000000;
+}
+
+.type-favorites {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  padding: 1rem;
+  gap: 1rem;
+}
+.filter {
+  &__search,
+  &__select,
+  &__all,
+  &__favorites {
+    padding: 0 0.5rem;
+    border: 1px solid rgba(31, 31, 31, 0.3);
+    background-color: #f3f3f3;
+    width: 200px;
+    box-sizing: border-box;
+    height: 30px;
+    border-radius: 4px;
+    cursor: pointer;
+    color: #757575;
+  }
+  &__search {
+    width: 175px;
+
+    @media all and (min-width: 680px) {
+      width: 250px;
+    }
+  }
+  &__select {
+    width: 110px;
+
+    @media all and (min-width: 680px) {
+      width: 150px;
+    }
+  }
+
+  &__all,
+  &__favorites {
+    width: 150px;
+    border-color: #71c1a1;
+
+    @media all and (min-width: 680px) {
+      width: 208px;
+    }
+  }
+  &__all {
+    border-radius: 4px 0 0 4px;
+  }
+  &__favorites {
+    border-radius: 0 4px 4px 0;
+  }
+}
+
+.filters__favorites {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+.active {
+  background-color: #71c1a1;
+  color: white;
 }
 </style>
