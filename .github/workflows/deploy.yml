@@ -6,7 +6,7 @@ on:
       - main
 
 env:
-  NODE_VERSION: '16.x'
+  NODE_VERSION: '18.x'
 
 jobs:
   deploy:
@@ -19,9 +19,9 @@ jobs:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'npm'
       - run: npm ci
-      - run: npm run build
+      - run: npm run generate
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./.output
+          publish_dir: ./.output/public
