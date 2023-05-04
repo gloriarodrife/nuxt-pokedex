@@ -124,15 +124,15 @@ const client_manifest = {
     "file": "index.46dc48e1.css",
     "src": "pages/index.css"
   },
-  "pages/pokemon/[id].css": {
-    "resourceType": "style",
-    "file": "_id_.eda1f740.css",
-    "src": "pages/pokemon/[id].css"
-  },
   "layouts/default.css": {
     "resourceType": "style",
     "file": "default.a27034ed.css",
     "src": "layouts/default.css"
+  },
+  "pages/pokemon/[id].css": {
+    "resourceType": "style",
+    "file": "_id_.eda1f740.css",
+    "src": "pages/pokemon/[id].css"
   },
   "node_modules/@nuxt/ui-templates/dist/templates/error-404.css": {
     "resourceType": "style",
