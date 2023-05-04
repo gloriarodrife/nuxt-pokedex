@@ -10,8 +10,8 @@
           pokemon.types.join(', ')
         }}</span>
       </div>
-      <Heart v-if="!pokemon.isFavorite" />
-      <HeartFavorite v-if="pokemon.isFavorite" />
+      <Heart v-if="!pokemon.isFavorite" @click="favoriteHasClicked" />
+      <HeartFavorite v-if="pokemon.isFavorite" @click="unfavoriteHasClicked" />
     </div>
   </div>
 </template>
@@ -20,6 +20,18 @@
 import type { Pokemon } from '~/types';
 
 const { pokemon } = defineProps<{ pokemon: Pokemon }>();
+
+const emit = defineEmits(['favoriteHasClicked', 'unfavoriteHasClicked']);
+
+const favoriteHasClicked = async (event: any) => {
+  event.preventDefault();
+  emit('favoriteHasClicked', pokemon.id);
+};
+
+const unfavoriteHasClicked = async (event: any) => {
+  event.preventDefault();
+  emit('unfavoriteHasClicked', pokemon.id);
+};
 </script>
 
 <style lang="scss">

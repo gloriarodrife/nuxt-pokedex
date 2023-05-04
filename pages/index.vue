@@ -52,7 +52,11 @@
   <ul class="list" v-if="pokemons">
     <li v-for="pokemon in pokemons" :key="pokemon.id">
       <NuxtLink :to="`/pokemon/${pokemon.id}`">
-        <PokemonCard :pokemon="pokemon" />
+        <PokemonCard
+          :pokemon="pokemon"
+          @favoriteHasClicked="favoriteHasClicked"
+          @unfavoriteHasClicked="unfavoriteHasClicked"
+        />
       </NuxtLink>
     </li>
   </ul>
@@ -68,7 +72,12 @@
 
 <script lang="ts" setup>
 import type { ParamsPokemons, Pokemon, PokemonsApiResponse } from '~/types';
-import { getPokemons, getPokemonsTypes } from '~/services/pokemons';
+import {
+  getPokemons,
+  getPokemonsTypes,
+  postPokemonFavorite,
+  postPokemonUnFavorite,
+} from '~/services/pokemons';
 
 const pokemonsCache = useState<PokemonsApiResponse['items']>(() => []);
 const pokemonsCount = useState<number>();
@@ -133,6 +142,22 @@ const onSelectType = (event: any) => {
 const loadMorePokemons = () => {
   queryParams.value.offset += queryParams.value.limit;
   refresh();
+};
+
+const favoriteHasClicked = async (pokemonId: string) => {
+  await postPokemonFavorite(pokemonId);
+  const currentPokemon = pokemonsCache.value.find(
+    (pokemon) => pokemon.id === pokemonId
+  )!;
+  currentPokemon.isFavorite = true;
+};
+
+const unfavoriteHasClicked = async (pokemonId: string) => {
+  await postPokemonUnFavorite(pokemonId);
+  const currentPokemon = pokemonsCache.value.find(
+    (pokemon) => pokemon.id === pokemonId
+  )!;
+  currentPokemon.isFavorite = false;
 };
 </script>
 
