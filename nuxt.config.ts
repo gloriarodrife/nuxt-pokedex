@@ -6,4 +6,10 @@ export default defineNuxtConfig({
         'https://q-exercise-api.o64ixruq9hj.us-south.codeengine.appdomain.cloud/api/rest',
     },
   },
+  ssr: false,
+  router: {
+    options: {
+      hashMode: true
+    }
+  }
 });
