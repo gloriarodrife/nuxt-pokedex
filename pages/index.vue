@@ -1,28 +1,30 @@
 <template >
   <div class="home-container">
-    <div>
-      <div class="filters__favorites">
-        <button class="filter__all" :class="{
-          active: !queryParams.isFavorite,
-        }" @click="filterAllPokemons">
-          All
-        </button>
-        <button class="filter__favorites" :class="{
-          active: queryParams.isFavorite,
-        }" @click="filterFavorites">
-          Favorites
-        </button>
-      </div>
+    <div class="filters__favorites">
+      <button class="filter__all" :class="{
+        active: !queryParams.isFavorite,
+      }" @click="filterAllPokemons">
+        All
+      </button>
+      <button class="filter__favorites" :class="{
+        active: queryParams.isFavorite,
+      }" @click="filterFavorites">
+        Favorites
+      </button>
     </div>
     <div class="type-favorites">
-      <input class="filter__search" placeholder="Search" type="search" id="name" name="name" @input="filterByName" />
+      <input class="filter__search" placeholder="Search" type="search" id="name" name="name" @input="filterByName"
+        :value="queryParams.search" />
       <div class="select">
-        <select name="types" id="types" class="filter__select" @change="onSelectType">
+        <select name="types" id="types" class="filter__select" @change="onSelectType" :value="queryParams.type">
           <option :value="''">Type</option>
           <option :value="type" :key="index" v-for="(type, index) in pokemonsTypes">
             {{ type }}
           </option>
         </select>
+      </div>
+      <div class="filter__delete">
+        <DeleteIcon @click="deleteFilters" />
       </div>
     </div>
 
@@ -134,6 +136,19 @@ const unfavoriteHasClicked = async (pokemonId: string) => {
   )!;
   currentPokemon.isFavorite = false;
 };
+
+const deleteFilters = () => {
+  console.log("click");
+  pokemonsCache.value = [];
+  queryParams.value = {
+    limit: 20,
+    offset: 0,
+    search: '',
+    isFavorite: false,
+    type: '',
+  }
+  refresh()
+}
 </script>
 
 <style lang="scss">
@@ -187,7 +202,8 @@ const unfavoriteHasClicked = async (pokemonId: string) => {
   &__search,
   &__select,
   &__all,
-  &__favorites {
+  &__favorites,
+  &__delete {
     padding: 0 0.5rem;
     border: 1px solid rgba(31, 31, 31, 0.3);
     background-color: #f3f3f3;
@@ -200,10 +216,10 @@ const unfavoriteHasClicked = async (pokemonId: string) => {
   }
 
   &__search {
-    width: 175px;
+    width: 150px;
 
     @media all and (min-width: 680px) {
-      width: 250px;
+      width: 205px;
     }
   }
 
@@ -213,6 +229,14 @@ const unfavoriteHasClicked = async (pokemonId: string) => {
     @media all and (min-width: 680px) {
       width: 150px;
     }
+  }
+
+  &__delete {
+    display: flex;
+    align-items: center;
+    width: 30px;
+    fill: #71c1a1;
+    cursor: pointer;
   }
 
   &__all,
