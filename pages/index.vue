@@ -1,48 +1,24 @@
 <template>
   <div>
     <div class="filters__favorites">
-      <button
-        class="filter__all"
-        :class="{
-          active: !queryParams.isFavorite,
-        }"
-        @click="filterAllPokemons"
-      >
+      <button class="filter__all" :class="{
+        active: !queryParams.isFavorite,
+      }" @click="filterAllPokemons">
         All
       </button>
-      <button
-        class="filter__favorites"
-        :class="{
-          active: queryParams.isFavorite,
-        }"
-        @click="filterFavorites"
-      >
+      <button class="filter__favorites" :class="{
+        active: queryParams.isFavorite,
+      }" @click="filterFavorites">
         Favorites
       </button>
     </div>
   </div>
   <div class="type-favorites">
-    <input
-      class="filter__search"
-      placeholder="Search"
-      type="search"
-      id="name"
-      name="name"
-      @input="filterByName"
-    />
+    <input class="filter__search" placeholder="Search" type="search" id="name" name="name" @input="filterByName" />
     <div class="select">
-      <select
-        name="types"
-        id="types"
-        class="filter__select"
-        @change="onSelectType"
-      >
+      <select name="types" id="types" class="filter__select" @change="onSelectType">
         <option :value="''">Type</option>
-        <option
-          :value="type"
-          :key="index"
-          v-for="(type, index) in pokemonsTypes"
-        >
+        <option :value="type" :key="index" v-for="(type, index) in pokemonsTypes">
           {{ type }}
         </option>
       </select>
@@ -52,20 +28,13 @@
   <ul class="list" v-if="pokemons">
     <li v-for="pokemon in pokemons" :key="pokemon.id">
       <NuxtLink :to="`/pokemon/${pokemon.id}`">
-        <PokemonCard
-          :pokemon="pokemon"
-          @favoriteHasClicked="favoriteHasClicked"
-          @unfavoriteHasClicked="unfavoriteHasClicked"
-        />
+        <PokemonCard :pokemon="pokemon" @favoriteHasClicked="favoriteHasClicked"
+          @unfavoriteHasClicked="unfavoriteHasClicked" />
       </NuxtLink>
     </li>
   </ul>
 
-  <button
-    class="button"
-    v-if="pokemonsCache.length <= pokemonsCount - 1"
-    @click="loadMorePokemons"
-  >
+  <button class="button " v-if="pokemonsCache.length <= pokemonsCount - 1" @click="loadMorePokemons">
     More pokemons
   </button>
 </template>
@@ -79,7 +48,7 @@ import {
   postPokemonUnFavorite,
 } from '~/services/pokemons';
 
-const pokemonsCache = useState<PokemonsApiResponse['items']>(() => []);
+const pokemonsCache = useState<PokemonsApiResponse['items']>('pokemonsCache', () => []);
 const pokemonsCount = useState<number>();
 
 const queryParams = ref<ParamsPokemons>({
@@ -117,24 +86,28 @@ const { data: pokemonsTypes } = await useLazyAsyncData(
 
 const filterFavorites = () => {
   pokemonsCache.value = [];
+  queryParams.value.offset = 0
   queryParams.value.isFavorite = true;
   refresh();
 };
 
 const filterAllPokemons = () => {
   pokemonsCache.value = [];
+  queryParams.value.offset = 0
   queryParams.value.isFavorite = false;
   refresh();
 };
 
 const filterByName = (event: any) => {
   pokemonsCache.value = [];
+  queryParams.value.offset = 0
   queryParams.value.search = event.target.value;
   refresh();
 };
 
 const onSelectType = (event: any) => {
   pokemonsCache.value = [];
+  queryParams.value.offset = 0
   queryParams.value.type = event.target.value;
   refresh();
 };
@@ -189,7 +162,9 @@ const unfavoriteHasClicked = async (pokemonId: string) => {
   height: 30px;
   border-radius: 4px;
   cursor: pointer;
-  color: #000000;
+  color: #757575;
+  border-color: #71c1a1;
+
 }
 
 .type-favorites {
@@ -199,7 +174,9 @@ const unfavoriteHasClicked = async (pokemonId: string) => {
   padding: 1rem;
   gap: 1rem;
 }
+
 .filter {
+
   &__search,
   &__select,
   &__all,
@@ -214,6 +191,7 @@ const unfavoriteHasClicked = async (pokemonId: string) => {
     cursor: pointer;
     color: #757575;
   }
+
   &__search {
     width: 175px;
 
@@ -221,6 +199,7 @@ const unfavoriteHasClicked = async (pokemonId: string) => {
       width: 250px;
     }
   }
+
   &__select {
     width: 110px;
 
@@ -238,9 +217,11 @@ const unfavoriteHasClicked = async (pokemonId: string) => {
       width: 208px;
     }
   }
+
   &__all {
     border-radius: 4px 0 0 4px;
   }
+
   &__favorites {
     border-radius: 0 4px 4px 0;
   }
@@ -251,6 +232,7 @@ const unfavoriteHasClicked = async (pokemonId: string) => {
   flex-direction: row;
   justify-content: center;
 }
+
 .active {
   background-color: #71c1a1;
   color: white;
