@@ -1,42 +1,44 @@
-<template>
-  <div>
-    <div class="filters__favorites">
-      <button class="filter__all" :class="{
-        active: !queryParams.isFavorite,
-      }" @click="filterAllPokemons">
-        All
-      </button>
-      <button class="filter__favorites" :class="{
-        active: queryParams.isFavorite,
-      }" @click="filterFavorites">
-        Favorites
-      </button>
+<template >
+  <div class="home-container">
+    <div>
+      <div class="filters__favorites">
+        <button class="filter__all" :class="{
+          active: !queryParams.isFavorite,
+        }" @click="filterAllPokemons">
+          All
+        </button>
+        <button class="filter__favorites" :class="{
+          active: queryParams.isFavorite,
+        }" @click="filterFavorites">
+          Favorites
+        </button>
+      </div>
     </div>
-  </div>
-  <div class="type-favorites">
-    <input class="filter__search" placeholder="Search" type="search" id="name" name="name" @input="filterByName" />
-    <div class="select">
-      <select name="types" id="types" class="filter__select" @change="onSelectType">
-        <option :value="''">Type</option>
-        <option :value="type" :key="index" v-for="(type, index) in pokemonsTypes">
-          {{ type }}
-        </option>
-      </select>
+    <div class="type-favorites">
+      <input class="filter__search" placeholder="Search" type="search" id="name" name="name" @input="filterByName" />
+      <div class="select">
+        <select name="types" id="types" class="filter__select" @change="onSelectType">
+          <option :value="''">Type</option>
+          <option :value="type" :key="index" v-for="(type, index) in pokemonsTypes">
+            {{ type }}
+          </option>
+        </select>
+      </div>
     </div>
+
+    <ul class="list" v-if="pokemons">
+      <li v-for="pokemon in pokemons" :key="pokemon.id">
+        <NuxtLink :to="`/pokemon/${pokemon.id}`">
+          <PokemonCard :pokemon="pokemon" @favoriteHasClicked="favoriteHasClicked"
+            @unfavoriteHasClicked="unfavoriteHasClicked" />
+        </NuxtLink>
+      </li>
+    </ul>
+
+    <button class="button " v-if="pokemonsCache.length <= pokemonsCount - 1" @click="loadMorePokemons">
+      More pokemons
+    </button>
   </div>
-
-  <ul class="list" v-if="pokemons">
-    <li v-for="pokemon in pokemons" :key="pokemon.id">
-      <NuxtLink :to="`/pokemon/${pokemon.id}`">
-        <PokemonCard :pokemon="pokemon" @favoriteHasClicked="favoriteHasClicked"
-          @unfavoriteHasClicked="unfavoriteHasClicked" />
-      </NuxtLink>
-    </li>
-  </ul>
-
-  <button class="button " v-if="pokemonsCache.length <= pokemonsCount - 1" @click="loadMorePokemons">
-    More pokemons
-  </button>
 </template>
 
 <script lang="ts" setup>
@@ -135,6 +137,11 @@ const unfavoriteHasClicked = async (pokemonId: string) => {
 </script>
 
 <style lang="scss">
+.home-container {
+  margin: 1rem auto 2rem;
+  max-width: 1000px;
+}
+
 .list {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
