@@ -1,5 +1,5 @@
 <template>
-  <div v-if="pending">Loading ...</div>
+  <div class='loading' v-if="pending">Loading ...</div>
   <div v-else>
     <div class="detail-container" v-if="pokemon">
       <div class="pokemon">
@@ -95,7 +95,7 @@ const { pending, data: pokemon } = await useLazyFetch<PokemonResponse>(
     width: 100%;
     padding: 0 0 1rem 1rem;
 
-    > svg {
+    >svg {
       cursor: pointer;
       width: 25px;
       height: 25px;
@@ -168,6 +168,9 @@ const { pending, data: pokemon } = await useLazyFetch<PokemonResponse>(
 
 .loading {
   text-align: center;
+  font-size: 1.5rem;
+  font-weight: 400;
+
 }
 
 .evolutions {
@@ -181,6 +184,7 @@ const { pending, data: pokemon } = await useLazyFetch<PokemonResponse>(
     flex-direction: row;
     gap: 1rem;
   }
+
   a {
     color: inherit;
     text-decoration: none;
